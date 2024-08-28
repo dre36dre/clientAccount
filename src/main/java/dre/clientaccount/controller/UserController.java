@@ -15,47 +15,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.qos.logback.core.net.server.Client;
+import dre.clientaccount.entities.Client;
 import dre.clientaccount.ClientRepository;
 
 @RestController
 @RequestMapping(value = "/clients")
 public class UserController {
 
-@Autowired
-private ClientRepository repository;
+    @Autowired
+    private ClientRepository repository;
 
-@GetMapping
-public List<Client> findAll(){
-    List<Client> result=repository.findAll();
-    return result;
-}
-@GetMapping(value="/{id}")
-public Client findById(@PathVariable Long id){
-    Client result=repository.findById(id).get();
-    return result;
+    @GetMapping
+    public List<Client> findAll() {
+        return repository.findAll();
+    }
 
-}
+    @GetMapping(value = "/{id}")
+    public Client findById(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
+    }
 
-@PostMapping
-public Client insert(@RequestBody Client client){
-    Client result=repository.save(client);
-    return result;
-}
+    @PostMapping
+    public Client insert(@RequestBody Client client) {
+        return repository.save(client);
+    }
 
-@DeleteMapping(value = "delete")
-@ResponseStatus(HttpStatus.NO_CONTENT)
-public void delete(@PathVariable Long id){
-    repository.deleteById(id);
-}
-@PutMapping("/{id}")
-public Client upDate(@PathVariable Long id,@RequestBody Client client){
-Client current=repository.findById(id).get();
-BeanUtils.copyProperties(client, current,"id");
-return repository.save(current);
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        repository.deleteById(id);
+    }
 
-}
-
-
-    
+    @PutMapping("/{id}")
+    public Client update(@PathVariable Long id, @RequestBody Client client) {
+        Client current = repository.findById(id).orElse(null);
+        if (current != null) {
+            BeanUtils.copyProperties(client, current, "id");
+            return repository.save(current);
+        }
+        return null;
+    }
 }
