@@ -20,7 +20,7 @@ import dre.clientaccount.ClientRepository;
 
 @RestController
 @RequestMapping(value = "/clients")
-public class UserController {
+public class ClientController {
 
     @Autowired
     private ClientRepository repository;
