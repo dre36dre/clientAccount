@@ -46,6 +46,7 @@ public class ClientController {
         repository.deleteById(id);
     }
 
+    //Método atualizar
     @PutMapping("/{id}")
     public Client update(@PathVariable Long id, @RequestBody Client client) {
         Client current = repository.findById(id).orElse(null);
